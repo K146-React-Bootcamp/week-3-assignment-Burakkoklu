@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Javascrpit Custom Event Counter Example</title>
+    <meta charset="UTF-8" />
+</head>
+
+<!-- Javascript CustomEvent() oluşturma ve dinleme -->
+<!-- Web tarayıcılar ile birlikte gelen birçok event var ve birçoğunu zaten kullanıyoruz. 
+    Click, input, change vb.. fakat bunların dışında kendi eventini CustomEvent() ile 
+    yaratıp bunu listen edebiliriz. -->
+
+<body>
+    <div id="app">
+
+        <!-- Öncelikle aşağıdaki gibi id si counter olan bir span ve iki adet onclick 
+        eventinde counterChange fonksiyon ekliyoruz, parametre olarak da increment ve 
+        decrement yazıyoruz. -->
+
+        <!-- Öncelikle globalde counter elementini seçiyoruz. counterChange fonksiyonu oluşturup 
+        parametre olarak type ekliyoruz. gelen tipe göre counter arttırma ya da azaltma yapmak için.
+        Her iki type için seçtiğimiz counterEl elementi için adı ‘counter-change’ olan bir CustomEvent 
+        dispatch ediyoruz aşağıdaki code spinnette gördüğün gibi. CustomEvent ile data geçmek için 
+        detail key ini kullanır. Bu yüzden detail içerisinde ben count diye bir property gönderdim. -->
+
+        Counter: <span id="counter">0</span>
+        <button onclick="counterChange('increment')">+</button>
+        <button onclick="counterChange('decrement')">-</button>
+    </div>
+
+    <script>
+        const counterEl = document.querySelector("#counter");
+
+        counterEl.addEventListener("counter-change", (e) => {
+            e.target.innerHTML = e.detail.count;
+        });
+
+        function counterChange(type) {
+            switch (type) {
+                case "increment":
+                    counterEl.dispatchEvent(
+                        new CustomEvent(
+                            "counter-change",
+                            {
+                                detail: {
+                                    count: Number(counterEl.innerHTML) + 1
+                                }
+                            },
+                            false
+                        )
+                    );
+                    break;
+                // Şimdi butonlara tıklanınca CustomEvent ile counter ı dispatch ettik. Şimdi 
+                // sıra geldi bunu dinlemeye. Anlat kardeşim dinliyorum…
+
+                case "decrement":
+                    counterEl.dispatchEvent(
+                        new CustomEvent(
+                            "counter-change",
+                            {
+                                detail: {
+                                    count: Number(counterEl.innerHTML) - 1
+                                }
+                            },
+                            false
+                        )
+                    );
+                default:
+                    break;
+            }
+        }
+        // Adını “counter-change” koyduğumuz bu CustomEvent her dispatch edildiğinde counterEl
+        // e bu eventi dinlemesi için bir görev verdik.
+
+    </script>
+</body>
+
+</html>
